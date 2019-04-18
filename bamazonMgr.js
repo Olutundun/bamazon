@@ -5,7 +5,7 @@ const colors = require('colors');
 const Table = require('cli-table');
 const inquirer = require('inquirer');
 
-var password =  keys.mysql.password;
+var password = keys.mysql.password;
 // mysql connection 
 var connection = mysql.createConnection({
   host: 'localhost',
@@ -149,25 +149,25 @@ function addProd() {
     .prompt([{
         name: "prodName",
         type: "input",
-        message: "Please enter the name of the product you would like to add:"
+        message: "Enter the name of the product you would like to add:"
       },
 
       {
         name: "deptName",
         type: "input",
-        message: "Please enter the department name of the product you would like to add:"
+        message: "Enter the department name of the product you would like to add:"
 
       },
       {
         name: "price",
         type: "number",
-        message: "Please enter the price of the product you would like to add:"
+        message: "Enter the price of the product you would like to add:"
 
       },
       {
         name: "stockQuant",
         type: "number",
-        message: "Please enter the units of the product you would like to add:"
+        message: "Enter the units of the product you would like to add:"
 
       },
     ])
@@ -187,22 +187,6 @@ function addProd() {
     })
 
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 colors.setTheme({
   silly: 'rainbow',
