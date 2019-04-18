@@ -5,7 +5,7 @@ const colors = require('colors');
 const Table = require('cli-table');
 const inquirer = require('inquirer');
 
-var password =  keys.mysql.password;
+var password = keys.mysql.password;
 
 // mysql connection 
 var connection = mysql.createConnection({
@@ -80,15 +80,27 @@ function promptCust() {
         } else if (answer.quant <= res[0].stock_quantity) {
           //Update the CART if we have enough in stock
           console.log("\n-----------------YOUR CART---------------------\n".error);
-          console.log("\nThis item has been added to your cart. Your order total is $ ".debug + (res[0].price * answer.quant) + "\n".debug)
+          console.log("\nThis item(s): " + res[0].product_name + " has been added to your cart. Your order total is $ ".debug + (res[0].price * answer.quant) + "\n".debug)
           //console.log("\nYou selected ")
           console.log("Thank you for shopping with us!".debug)
           console.log("\n=====================||=====================\n");
-          const updateQuery = 'UPDATE products SET stock_quantity = ' + (res[0].stock_quantity - answer.quant) + ' WHERE item_id = ' + answer.id;
+          // update stock quantity
+          const updateStock = "UPDATE products SET stock_quantity = " + (res[0].stock_quantity - answer.quant) + " WHERE item_id = " + answer.id;
 
-          connection.query(updateQuery, function (err, res) {
+          connection.query(updateStock, function (err, res) {
             if (err) throw err;
+
+          })
+          //update product_sales column
+          //const updateSales = "UPDATE products SET product_sales = " + (res[0].price * answer.quant)  + " WHERE item_id = " + answer.id;
+          const updateSales = "UPDATE products SET product_sales = product_sales + ? WHERE item_id = ?";
+
+          connection.query(updateSales, [res[0].price * answer.quant, answer.id], function (err, res) {
+
+            if (err) throw err;
+
             displayInventory();
+
           })
         }
       })
