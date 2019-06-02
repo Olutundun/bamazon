@@ -21,8 +21,32 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err;
   console.log("\n|| WELCOME TO BAMAZON! Your Customer ID is ".cyan + connection.threadId + ". ||\n".cyan);
-  displayInventory();
+  choice();
 });
+
+function choice() {
+  inquirer
+    .prompt({
+      name: "action",
+      type: "list",
+      message: "What would you like to do?",
+      choices: [
+        "Make a purchase",
+        "exit"
+      ]
+    })
+    .then(function (answer) {
+      switch (answer.action) {
+        case "Make a purchase":
+          displayInventory();
+          break;
+
+        case "exit":
+          connection.end();
+          break;
+      }
+    });
+}
 
 //function to display inventory from the database
 function displayInventory() {
@@ -54,16 +78,17 @@ function promptCust() {
     .prompt([{
         name: "id",
         type: "number",
-        message: "Please enter the item ID of the product you would like to purchase:".warn,
-        //create validation for customer input
-
+        message: "Please enter the item ID of the product you would like to purchase: ".warn,
+        validate: function (val) {
+          return !isNaN(val) || "Please enter a valid number.";
+        }
       },
-
       {
         name: "quant",
         type: "number",
         message: "How many units of this product would you like?".warn
       },
+
     ])
     //check if store has enough of the product to meet the customer's request
     .then(function (answer) {

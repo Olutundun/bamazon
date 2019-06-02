@@ -33,7 +33,8 @@ function displayMenu() {
         "VIEW PRODUCTS FOR SALE",
         "VIEW LOW INVENTORY",
         "ADD TO INVENTORY",
-        "ADD NEW PRODUCT"
+        "ADD NEW PRODUCT",
+        "EXIT"
       ]
     })
     .then(function (answer) {
@@ -53,6 +54,10 @@ function displayMenu() {
 
         case "ADD NEW PRODUCT":
           addProd();
+          break;
+
+        case "EXIT":
+          connection.end();
           break;
 
       }

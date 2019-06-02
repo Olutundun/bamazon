@@ -32,43 +32,51 @@ function displayMenu() {
       message: "\nPlease select an option: \n".cyan,
       choices: [
         "VIEW PRODUCT SALES BY DEPARTMENT",
-        "CREATE NEW DEPARTMENT"
+        "CREATE NEW DEPARTMENT",
+        "EXIT"
       ]
     })
     .then(function (answer) {
 
       switch (answer.menu) {
         case "VIEW PRODUCT SALES BY DEPARTMENT":
-          viewProd();
+          viewSales();
           break;
 
         case "CREATE NEW DEPARTMENT":
           createNewDept();
           break;
+
+        case "EXIT":
+          connection.end();
+          break;
       }
     });
-}
+};
+
 //function to view products
-function viewProd() {
+function viewSales() {
 
   console.log("=============================================");
   console.log("\nPRODUCT SALES BY DEPARTMENT:\n".warn);
 
-  var query = "SELECT dept.department_id, dept.department_name, dept.over_head_costs, products.product_sales FROM departments AS dept INNER JOIN products ON (dept.department_name = products.department_name) GROUP BY dept.department_name";
+  var query = "SELECT products.department_name, SUM(products.product_sales) AS sales, departments.department_id, departments.over_head_costs FROM products INNER JOIN departments On products.department_name = departments.department_name GROUP BY department_name"
+
 
   connection.query(query, function (err, res) {
-    //if (err) throw err;
-    //console.log(res.length + " matches found!");
+    if (err) throw err;
+    // console.log(res.length + " matches found!");
 
     // style table headings and loop through inventory
     var displayTable = new Table({
-      head: ["DEPARTMENT ID", "DEPARTMENT NAME", "OVERHEAD COSTS ($)", "PRODUCT SALES ($)"],
-      colWidths: [22, 22, 22, 22]
+      head: ["DEPARTMENT ID", "DEPARTMENT NAME", "OVERHEAD COSTS ($)", "Product Sales", "Total Profit"],
+      colWidths: [22, 22, 22, 22, 22]
     });
 
     for (var i = 0; i < res.length; i++) {
+      const profit = res[i].sales - res[i].over_head_costs;
       displayTable.push(
-        [res[i].department_id, res[i].department_name, res[i].over_head_costs, res[i].product_sales]
+        [res[i].department_id, res[i].department_name, res[i].over_head_costs, profit]
       );
     }
     console.log(displayTable.toString().info);
@@ -76,6 +84,7 @@ function viewProd() {
     displayMenu();
   })
 };
+
 
 function createNewDept() {
   inquirer.prompt([{

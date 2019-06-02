@@ -1,7 +1,7 @@
 {
   "name": "bamazon",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is a CLI application that uses MYSQL database and inquirer npm packages for data input and storage and coded using node.js. It has customer, manager and supervisor options for buying, adding and managing inventories. It is an Amazon-like storefront that takes in orders from customers and depletes stock from the store's inventory. It also tracks product sales across the store's departments and provides a summary of the highest-grossing departments in the store.",
   "main": "bamazonCustomer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
